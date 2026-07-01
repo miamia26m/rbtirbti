@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RBTI读书人格测试｜周三读书关爱中心</title>
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+body{
+  background:#f8f9fa;
+  color:#222;
+  padding:20px 14px;
+  max-width:680px;
+  margin:0 auto;
+  line-height:1.75;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+:root{
+  --main-red:#c82423;
+  --light-gray:#fafafa;
+  --text-gray:#777;
+  --border-gray:#e8e8e8;
+  --radius:14px;
+}
+.page{
+  display:none;
+  animation:fadeIn 0.3s ease;
+}
+.page.active{
+  display:block;
+}
+@keyframes fadeIn{
+  0%{opacity:0.4;transform:translateY(8px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+.main-logo{
+  font-size:28px;
+  color:var(--main-red);
+  text-align:center;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+.club-name{
+  font-size:14px;
+  color:#444;
+  text-align:center;
+  margin-bottom:6px;
+}
+.desc-text{
+  font-size:14px;
+  color:var(--text-gray);
+  text-align:center;
+  line-height:1.8;
+  margin-bottom:30px;
+  padding:0 6px;
+}
+.q-item{
+  margin:24px 0;
+  padding-bottom:16px;
+  border-bottom:1px dashed var(--border-gray);
+}
+.q-title{
+  font-size:15px;
+  margin-bottom:10px;
+  font-weight:500;
+  color:#1a1a1a;
+}
+.opt{
+  padding:16px 14px;
+  border:1px solid var(--border-gray);
+  border-radius:var(--radius);
+  margin:9px 0;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,0.02);
+}
+.opt:hover{
+  border-color:#b0b0b0;
+  background:#f5f5f5;
+}
+.opt:active{
+  transform:scale(0.98);
+}
+.opt.active{
+  background:var(--main-red);
+  color:#fff;
+  border-color:var(--main-red);
+  box-shadow:0 4px 10px rgba(200,36,35,0.25);
+}
+.btn{
+  width:100%;
+  padding:16px 0;
+  background:var(--main-red);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius);
+  font-size:16px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  box-shadow:0 4px 12px rgba(200,36,35,0.25);
+  letter-spacing:1px;
+  margin-top:8px;
+}
+.btn:hover{
+  background:#a81e1e;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(200,36,35,0.35);
+}
+.btn:active{
+  transform:scale(0.97);
+}
+.result-card{
+  background:#ffffff;
+  border:1px solid var(--border-gray);
+  padding:24px 16px 26px;
+  border-radius:var(--radius);
+  margin-top:18px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.04);
+}
+/* 图片尺寸：宽度70%，最大高度300，无圆角不变形完整显示 */
+.avatar-img{
+  max-width:70%;
+  max-height:300px;
+  width:auto;
+  height:auto;
+  display:block;
+  margin:0 auto 10px;
+  border-radius:0;
+  object-fit:contain;
+}
+.avatar-img.hide{
+  display:none;
+}
+.res-name{
+  font-size:26px;
+  font-weight:bold;
+  color:var(--main-red);
+  margin-top:10px;
+  margin-bottom:6px;
+  text-align:center;
+}
+.res-tip{
+  font-size:12px;
+  color:var(--text-gray);
+  margin-bottom:14px;
+  text-align:center;
+}
+.info-wrap{
+  border:1px solid var(--main-red);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:16px;
+}
+.tag-label{
+  font-size:15px;
+  font-weight:500;
+  color:var(--main-red);
+  margin-bottom:6px;
+  display:block;
+}
+#resDesc{
+  font-size:15px;
+  color:#333;
+  line-height:1.8;
+}
+.split-line{
+  margin:22px 0;
+  border-top:1px solid var(--border-gray);
+  padding-top:20px;
+}
+.book-item{
+  margin:6px 0;
+  font-size:14px;
+  padding-left:4px;
+}
+.load-box{
+  height:75vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+}
+.load-text{
+  font-size:18px;
+  color:var(--main-red);
+  font-weight:500;
+  text-align:center;
+}
+.load-dot{
+  display:inline-block;
+  animation:dot 1.2s infinite;
+}
+@keyframes dot{
+  0%{opacity:0.2}
+  50%{opacity:1}
+  100%{opacity:0.2}
+}
+.load-spinner{
+  width:46px;
+  height:46px;
+  border:4px solid #e0e0e0;
+  border-top:4px solid var(--main-red);
+  border-radius:50%;
+  animation:spin 0.9s linear infinite;
+}
+@keyframes spin{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+.footer-note{
+  margin-top:36px;
+  text-align:center;
+  font-size:12px;
+  color:#aaa;
+  border-top:1px solid #eee;
+  padding-top:18px;
+  letter-spacing:0.5px;
+}
+</style>
+</head>
+<body>
+<div class="page active" id="page-home">
+  <div class="main-logo">RBTI读书人格测试</div>
+  <div class="club-name">Reading&Books Type Indicator</div>
+  <div class="club-name" style="margin-bottom:16px;">周三读书关爱中心</div>
+  <div class="desc-text">
+    您好，欢迎来到周三读书关爱中心<br>
+    8道简易问诊题，快速诊断专属RBTI人格<br>
+    无需花费过多时间，轻松完成一次阅读习惯测评
+  </div>
+  <button class="btn" onclick="switchPage('page-home','page-answer')">开始问诊诊断</button>
+  <div class="footer-note">© 2026 周三读书关爱中心 · 用阅读治愈心灵</div>
+</div>
+
+<div class="page" id="page-answer">
+  <div class="main-logo" style="font-size:22px;text-align:center;">RBTI 问诊答题</div>
+  <div class="desc-text">请依据自身真实状态，选择更偏向的一项</div>
+  <div id="questionWrap"></div>
+  <button class="btn" onclick="startAnalyze()">确认提交，开始解析报告</button>
+</div>
+
+<div class="page" id="page-loading">
+  <div class="load-box">
+    <div class="load-spinner"></div>
+    <div class="load-text">正在调取阅读行为数据<span class="load-dot">...</span></div>
+    <div style="color:#888;font-size:14px;text-align:center;">仪器分析中，请您稍作等候</div>
+    <div style="color:#ccc;font-size:12px;text-align:center;">正在生成专属诊断报告</div>
+  </div>
+</div>
+
+<div class="page" id="page-result">
+  <div class="main-logo" style="font-size:22px;text-align:center;margin:8px 0;">人格诊断报告</div>
+  <div class="club-name" style="text-align:center;margin-bottom:16px;">周三读书关爱中心 专属开具</div>
+  <div class="result-card">
+    <img class="avatar-img" id="avatarImage" alt="人格专属形象" onerror="this.style.display='none'">
+    <div class="res-name" id="resName"></div>
+    <div class="res-tip" id="resMbtiTip"></div>
+    <div class="info-wrap">
+      <div class="tag-label" id="resAvatar">🧑‍🎨 人格画像：</div>
+      <div id="resDesc"></div>
+    </div>
+    <div class="split-line">
+      <p style="font-weight:600;color:var(--main-red);font-size:16px;">📄 读书医嘱</p>
+      <p id="resQuote" style="margin-top:10px; font-style:italic;color:#555;background:#fff;padding:12px 14px;border-radius:var(--radius);border-left:4px solid var(--main-red);"></p>
+    </div>
+    <div>
+      <p style="font-weight:600;color:var(--main-red);font-size:16px;">📚 专属治愈书单处方</p>
+      <div id="resBookList" style="margin-top:12px;background:#fff;padding:12px 14px;border-radius:var(--radius);"></div>
+    </div>
+  </div>
+  <button class="btn" onclick="resetAllAndBackHome()" style="margin-top:24px;">重新问诊</button>
+  <div class="footer-note">© 2026 周三读书关爱中心 · 愿书籍温暖你</div>
+</div>
+
+<script>
+function switchPage(hideId, showId) {
+  document.getElementById(hideId).classList.remove('active');
+  document.getElementById(showId).classList.add('active');
+}
+
+function resetAllAndBackHome(){
+  answerArr = [null,null,null,null,null,null,null,null];
+  document.querySelectorAll('.opt').forEach(el => el.classList.remove('active'));
+  document.getElementById("resName").innerText = "";
+  document.getElementById("resMbtiTip").innerText = "";
+  document.getElementById("resDesc").innerText = "";
+  document.getElementById("resQuote").innerText = "";
+  document.getElementById("resBookList").innerHTML = "";
+  const avatar = document.getElementById("avatarImage");
+  avatar.classList.add('hide');
+  avatar.style.display = "block";
+  switchPage('page-result','page-home');
+}
+
+const questionList = [
+  {title: "读完一本很喜欢的书后，你更倾向？",a:"愿意主动安利分享，和别人交流读后感",b:"独自回味消化，很少与人讨论这本书内容"},
+  {title: "日常选书整体偏好更偏向？",a:"纪实、史实、干货、贴近现实生活的内容",b:"小说、幻想、诗歌、氛围感与抽象立意类内容"},
+  {title: "决定是否认真写读书笔记，主要依据是？",a:"内容逻辑清晰、具备实用参考与学习价值",b:"文字能够触动情绪，带来强烈的个人内心共鸣"},
+  {title: "你的阅读整体节奏习惯？",a:"会列好书单，按照计划有序分批阅读",b:"没有固定阅读规划，随心翻阅，读到哪里算哪里"},
+  {title: "发现一本很合心意的好书，你会？",a:"主动推荐给身边人，甚至相约一起共读",b:"悄悄自己收藏阅读，一般不会对外提及"},
+  {title: "书写读书笔记时，主要记录内容是？",a:"具体情节、关键信息、实用方法与客观细节",b:"打动你的句子、象征隐喻、内心联想与氛围感感受"},
+  {title: "写下书评与笔记时，习惯方式是？",a:"条理梳理优缺点，客观分析书籍结构与逻辑",b:"大量摘抄心动段落，侧重记录自身感动与情绪"},
+  {title: "笔记与文字排版整理习惯？",a:"分类清晰、排版规整，会定期整理复盘笔记",b:"随性记录自由书写，没有固定格式与整理周期"}
+];
+
+// 严格按照你提供的图片链接一一对应修正，图文完全匹配
+const personalityData = {
+  "ESTJ": {
+    name:"历史规划顾问",
+    guessTip:"ESTJ｜历史规划顾问",
+    desc:"偏爱历史纪实、社科干货，自律制定书单，乐于为他人精准推荐专业读物。严谨书单管理者、理性组织者，条理感极强的读书会统筹者",
+    quote:"读书之法，在循序而渐进，熟读而精思。——南宋·朱熹《读书之要》",
+    books:["《人类简史》","《中国历代政治得失》","《清单革命》"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmaUNdJ.png"
+  },
+  "ESTP": {
+    name:"现实故事主播",
+    guessTip:"ESTP｜现实故事主播",
+    desc:"偏爱市井纪实通俗读物，读到趣味内容立刻分享，阅读随性无长期计划。人间故事讲述者，接地气、擅长现场说书分享的乐天派",
+    quote:"世事洞明皆学问，人情练达即文章。——曹雪芹《红楼梦》第五回",
+    books:["《长安的荔枝》","《显微镜下的大明》","《秋园》"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmaw5S1.png"
+  },
+  "ESFJ": {
+    name:"治愈共读向导",
+    guessTip:"ESFJ｜治愈共读向导",
+    desc:"偏爱温情现实文学，擅长组织同伴共读，用柔软文字安抚身边人的情绪。温柔共读搭子、气氛安抚者，读书会暖心组织者",
+    quote:"书卷多情似故人，晨昏忧乐每相亲。——明·于谦《观书》",
+    books:["《山茶文具店》","《云边有个小卖部》","《你当像鸟飞往你的山》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdDsuq.png"
+  },
+  "ESFP": {
+    name:"浪漫体验编辑",
+    guessTip:"ESFP｜浪漫体验编辑",
+    desc:"偏爱生活化浪漫小故事，擅长捕捉文字细腻情绪，热衷于对外分享阅读感触。感官浪漫体验家，随性记录美好、热衷氛围感分享的文艺编辑",
+    quote:"每一本书都是一扇通往不同人生的门。",
+    books:["《小日子》","《请回答1988》原著","《步履不停》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdDyD0.png"
+  },
+  "ENTJ": {
+    name:"思辨主讲编辑",
+    guessTip:"ENTJ｜思辨主讲编辑",
+    desc:"深耕严肃哲学、社科著作，逻辑缜密，主导读书会讨论，产出犀利深度书评。文字思辨领袖，观点输出者，读书会主导型主讲人",
+    quote:"学而不思则罔，思而不学则殆。——《论语·为政》孔子",
+    books:["《理想国》","《乌合之众》","《论人类不平等的起源》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdDa4g.png"
+  },
+  "ENTP": {
+    name:"科幻造梦策划",
+    guessTip:"ENTP｜科幻造梦策划",
+    desc:"痴迷科幻、奇幻架空题材，热衷拆解世界观，喜欢和人探讨故事多种可能性。脑洞创意玩家，幻想题材趣味策划者",
+    quote:"想象力比知识更重要，知识是有限的，想象力囊括整个世界。——爱因斯坦",
+    books:["《三体》","《沙丘》","《夜晚的潜水艇》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdDBgs.png"
+  },
+  "ENFJ": {
+    name:"温情文字顾问",
+    guessTip:"ENFJ｜温情文字顾问",
+    desc:"共情力突出，偏爱带有深层内核的文艺小说，擅长解读文字背后的情绪与隐喻。情绪解读顾问，温柔的文字治愈主讲，擅长共情开导他人",
+    quote:"读书足以怡情，足以傅彩，足以长才。——培根《谈读书》王佐良译本",
+    books:["《撒哈拉的故事》","《橘子不是唯一的水果》","《悉达多》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdDwCQ.png"
+  },
+  "ENFP": {
+    name:"诗意书单探员",
+    guessTip:"ENFP｜诗意书单探员",
+    desc:"广泛阅读诗歌、文艺随笔，挖到好书就主动安利，随心发掘各类文艺作品。浪漫漫游探险家，随性种草、永远在发掘新书的快乐探员",
+    quote:"读万卷书，行万里路。——北宋·刘彝《画旨》",
+    books:["《小王子》","《月亮与六便士》","《瓦尔登湖》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdD03j.png"
+  },
+  "ISTJ": {
+    name:"纪实资料研究员",
+    guessTip:"ISTJ｜纪实资料研究员",
+    desc:"只读严谨史料、专业纪实书籍，固定阅读作息，独自整理读书笔记，极少对外交流。严谨考据研究员，低调务实的文献钻研者",
+    quote:"旧书不厌百回读，熟读深思子自知。——苏轼《送安惇秀才失解西归》",
+    books:["《史记》","《海错图笔记》","《统计思维》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdDUUS.png"
+  },
+  "ISTP": {
+    name:"冷门读物探员",
+    guessTip:"ISTP｜冷门读物探员",
+    desc:"偏爱小众科普、冷门纪实随笔，独自安静翻阅，随心选书，不制定长期阅读计划。私藏宝藏挖掘者，偏爱无人知晓的小众佳作",
+    quote:"吾生也有涯，而知也无涯。——《庄子·养生主》",
+    books:["《万物简史》","《东京百景》","《万物理论》"],
+    imgSrc:"https://s41.ax1x.com/2026/07/01/pmdDDvn.png"
+  },
+  "ISFJ": {
+    name:"温情藏书整理员",
+    guessTip:"ISFJ｜温情藏书整理员",
+    desc:"偏爱平淡细腻写实故事，独自消化书中情绪，不会主动和别人聊读后感。内敛温柔收藏者，细心收纳书籍与内心情绪",
+    quote:"非学无以广才，非志无以成学。——诸葛亮《诫子书》",
+    books:["《雪国》","《秋园》","《山茶文具店》"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmawoy6.png"
+  },
+  "ISFP": {
+    name:"治愈诗歌收藏家",
+    guessTip:"ISFP｜治愈诗歌收藏家",
+    desc:"专注治愈散文、短篇文艺作品，靠文字自我疗愈，阅读完全不受清单约束。独处诗意收藏家，依靠文字自我治愈",
+    quote:"书犹药也，善读之可以医愚。——刘向《说苑·建本》",
+    books:["《万物有灵且美》","《山月记》","《云雀叫了一整天》"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmawNdg.png"
+  },
+  "INTJ": {
+    name:"严肃思想研究员",
+    guessTip:"INTJ｜严肃思想研究员",
+    desc:"深耕哲学、反乌托邦严肃文学，拥有长期深度阅读规划，独自拆解作品底层逻辑。深度思想剖析者，习惯独立挖掘作品内核",
+    quote:"知之者不如好之者，好之者不如乐之者。——《论语·雍也》孔子",
+    books:["《1984》","《人类群星闪耀时》","《存在与时间》（精简普及版）"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmawJL8.png"
+  },
+  "INTP": {
+    name:"幻谜文本分析师",
+    guessTip:"INTP｜幻谜文本分析师",
+    desc:"沉迷科幻、悬疑、架空题材，同时看多本书，独自推敲剧情伏笔与设定漏洞。文本逻辑拆解师，痴迷推敲世界观与逻辑细节",
+    quote:"尽信书，则不如无书。——《孟子·尽心下》",
+    books:["《平面国》","《哥德尔、艾舍尔、巴赫》","《局外人》"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmawGsf.png"
+  },
+  "INFP": {
+    name:"浪漫梦境收藏家",
+    guessTip:"INFP｜浪漫梦境收藏家",
+    desc:"诗歌、文艺浪漫小说爱好者，沉浸文字构建的理想世界，随心所欲阅读无束缚。浪漫筑梦收藏家，诗意理想主义者，沉溺文字梦境的温柔书虫",
+    quote:"人充满劳绩，但依然诗意地栖居在这片大地上。——荷尔德林",
+    books:["《海子诗选》","《挪威的森林》","《小团圆》"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmawkxx.png"
+  },
+  "INFJ": {
+    name:"隐喻文字观察员",
+    guessTip:"INFJ｜隐喻文字观察员",
+    desc:"偏爱富含隐喻、精神内核的文艺小说，沉浸式独处阅读，书籍作为专属精神避风港。细腻洞察者，擅长捕捉文字背后隐喻与深意",
+    quote:"读书使人充实，思考使人深邃。",
+    books:["《看不见的城市》","《悉达多》","《局外人》"],
+    imgSrc:"https://s41.ax1x.com/2026/06/29/pmawQJA.png"
+  }
+};
+
+let answerArr = [null,null,null,null,null,null,null,null];
+
+function renderQuestions(){
+  const wrap = document.getElementById("questionWrap");
+  wrap.innerHTML = "";
+  for(let i=0;i<questionList.length;i++){
+    const item = questionList[i];
+    let div = document.createElement("div");
+    div.className = "q-item";
+    div.innerHTML = `<div class="q-title">${i+1}. ${item.title}</div>
+    <div class="opt" onclick="selectOpt(${i},'A',this)">A. ${item.a}</div>
+    <div class="opt" onclick="selectOpt(${i},'B',this)">B. ${item.b}</div>`;
+    wrap.appendChild(div);
+  }
+}
+
+function selectOpt(index,val,dom){
+  dom.parentElement.querySelectorAll(".opt").forEach(o=>o.classList.remove('active'));
+  dom.classList.add("active");
+  answerArr[index] = val;
+}
+
+function startAnalyze(){
+  if(answerArr.includes(null)){
+    alert("请完成全部题目再提交");
+    return;
+  }
+  switchPage('page-answer','page-loading');
+  setTimeout(calcMBTI, 1200);
+}
+
+function calcMBTI(){
+  // E/I 第1、5题
+  let e=0,i=0;
+  answerArr[0]==='A'?e++:i++;
+  answerArr[4]==='A'?e++:i++;
+  const D1 = e>=i?'E':'I';
+  // S/N 第2、6题
+  let s=0,n=0;
+  answerArr[1]==='A'?s++:n++;
+  answerArr[5]==='A'?s++:n++;
+  const D2 = s>=n?'S':'N';
+  // T/F 第3、7题
+  let t=0,f=0;
+  answerArr[2]==='A'?t++:f++;
+  answerArr[6]==='A'?t++:f++;
+  const D3 = t>=f?'T':'F';
+  // J/P 第4、8题
+  let j=0,p=0;
+  answerArr[3]==='A'?j++:p++;
+  answerArr[7]==='A'?j++:p++;
+  const D4 = j>=p?'J':'P';
+  const key = D1+D2+D3+D4;
+  const data = personalityData[key];
+  const img = document.getElementById("avatarImage");
+  img.style.display = "block";
+  img.src = data.imgSrc;
+  img.classList.remove('hide');
+  document.getElementById("resName").innerText = data.name;
+  document.getElementById("resMbtiTip").innerText = data.guessTip;
+  document.getElementById("resDesc").innerText = data.desc;
+  document.getElementById("resQuote").innerText = data.quote;
+  let bookHtml = "";
+  data.books.forEach(b=> bookHtml += `<div class="book-item">📌 ${b}</div>`);
+  document.getElementById("resBookList").innerHTML = bookHtml;
+  switchPage('page-loading','page-result');
+}
+
+window.onload = function(){
+  renderQuestions();
+}
+</script>
+</body>
+</html>
